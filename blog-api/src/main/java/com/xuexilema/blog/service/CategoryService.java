@@ -12,4 +12,17 @@ public interface CategoryService {
      * @return
      */
     Result findAll();
+
+    /**
+     * 查找首页种类详情
+     * @return
+     */
+    Result findCategoryDetail();
+
+    /**
+     * 根据种类id查找该种类下有多少文章
+     * @param id
+     * @return
+     */
+    Result categoriesDetailById(Long id);
 }

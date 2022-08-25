@@ -9,4 +9,8 @@ public class PageParams {
 
     private int pageSize = 10;
 
+    private Long tagId;
+
+    private Long categoryId;
+
 }

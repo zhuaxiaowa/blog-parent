@@ -23,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryVo findCategory(Long categoryId) {
         Category category = categoryMapper.selectById(categoryId);
         CategoryVo categoryVo = new CategoryVo();
-        BeanUtils.copyProperties(category,categoryVo);
+        BeanUtils.copyProperties(category, categoryVo);
         return categoryVo;
     }
 
@@ -34,8 +34,33 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Result findAll() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Category::getId, Category::getCategoryName);
+        List<Category> categories = this.categoryMapper.selectList(queryWrapper);
+        return Result.success(copyList(categories));
+    }
+
+    /**
+     * 查找首页文章分类详情
+     *
+     * @return
+     */
+    @Override
+    public Result findCategoryDetail() {
         List<Category> categories = this.categoryMapper.selectList(new LambdaQueryWrapper<>());
         return Result.success(copyList(categories));
+    }
+
+    /**
+     * 根据种类id查找该种类下的文章
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Result categoriesDetailById(Long id) {
+        Category category = categoryMapper.selectById(id);
+        return Result.success(copy(category));
     }
 
     private List<CategoryVo> copyList(List<Category> categories) {

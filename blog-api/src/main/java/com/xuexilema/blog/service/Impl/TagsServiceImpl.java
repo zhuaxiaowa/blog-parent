@@ -21,6 +21,7 @@ public class TagsServiceImpl implements TagsService {
 
     @Autowired
     private TagMapper tagMapper;  // mybatiplus无法进行多表查询 自己写一个
+
     @Override
     public List<TagVo> findTagsByArticleId(Long articleId) {
 
@@ -31,13 +32,14 @@ public class TagsServiceImpl implements TagsService {
 
     /**
      * 查询最热标签
+     *
      * @param limit
      * @return
      */
     @Override
     public List<TagVo> hot(int limit) {
         List<Long> hotsTagIds = tagMapper.findHotsTagIds(limit);
-        if(CollectionUtils.isEmpty(hotsTagIds)){
+        if (CollectionUtils.isEmpty(hotsTagIds)) {
             return Collections.emptyList();
         }
         List<Tag> tagList = tagMapper.findTagsByHotsTagIds(hotsTagIds);
@@ -46,12 +48,37 @@ public class TagsServiceImpl implements TagsService {
 
     /**
      * 所有文章标签
+     *
      * @return
      */
     @Override
     public Result findAll() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Tag::getId, Tag::getTagName);
+        List<Tag> tagList = this.tagMapper.selectList(queryWrapper);
+        return Result.success(copyList(tagList));
+    }
+
+    /**
+     * 文章分类标签详情
+     *
+     * @return
+     */
+    @Override
+    public Result findTagsDetail() {
         List<Tag> tagList = this.tagMapper.selectList(new LambdaQueryWrapper<>());
         return Result.success(copyList(tagList));
+    }
+
+    /**
+     * 根据tagId查找tag下的文章
+     * @param id
+     * @return
+     */
+    @Override
+    public Result tagsDetailById(Long id) {
+        Tag tag = tagMapper.selectById(id);
+        return Result.success(copy(tag));
     }
 
     private List<TagVo> copyList(List<Tag> tags) {
@@ -64,7 +91,7 @@ public class TagsServiceImpl implements TagsService {
 
     private TagVo copy(Tag tag) {
         TagVo tagVo = new TagVo();
-        BeanUtils.copyProperties(tag,tagVo);
+        BeanUtils.copyProperties(tag, tagVo);
         return tagVo;
     }
 

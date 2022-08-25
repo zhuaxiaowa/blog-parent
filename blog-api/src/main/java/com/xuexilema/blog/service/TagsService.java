@@ -15,7 +15,22 @@ public interface TagsService {
 
     /**
      * 所有文章标签
+     *
      * @return
      */
     Result findAll();
+
+    /**
+     * 文章分类标签
+     *
+     * @return
+     */
+    Result findTagsDetail();
+
+    /**
+     * 根据tagId查找tag下的文章
+     * @param id
+     * @return
+     */
+    Result tagsDetailById(Long id);
 }

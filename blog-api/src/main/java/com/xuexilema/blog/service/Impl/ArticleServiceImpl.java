@@ -58,7 +58,12 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public List<ArticleVo> listArticlesPage(PageParams pageParams) {
-        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        // 查询文章的参数，加上参数分类id不为空，加上分类条件,这样在首页文章分类标签里显示的就不是全部文章了。
+        if (pageParams.getCategoryId() != null) {
+            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+        }
+
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
         List<ArticleVo> articleVoList = copyList(articlePage.getRecords(), true, true);

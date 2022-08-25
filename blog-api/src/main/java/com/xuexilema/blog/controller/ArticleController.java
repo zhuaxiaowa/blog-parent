@@ -26,7 +26,7 @@ public class ArticleController {
      */
     // result是统一结果返回
     @PostMapping
-    @LogAnnotation(module = "文章",operation = "获取文章列表")
+    @LogAnnotation(module = "文章", operation = "获取文章列表")
     public Result articles(@RequestBody PageParams pageParams) {
 
         // ArticleVo页面接收的数据
@@ -38,6 +38,7 @@ public class ArticleController {
     }
 
     // git提交测试
+
     /**
      * 首页最热文章
      *
@@ -70,17 +71,18 @@ public class ArticleController {
     }
 
     @PostMapping("/view/{id}")
-    public Result findArticleById(@PathVariable("id") Long id){
+    public Result findArticleById(@PathVariable("id") Long id) {
         return articleService.findArticleById(id);
     }
 
     /**
      * 发布文章
+     *
      * @param articleParam
      * @return
      */
     @PostMapping("/publish")
-    public Result publish(@RequestBody ArticleParam articleParam){
+    public Result publish(@RequestBody ArticleParam articleParam) {
         return articleService.publish(articleParam);
     }
 }
