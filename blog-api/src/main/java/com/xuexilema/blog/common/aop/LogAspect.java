@@ -1,4 +1,4 @@
-package com.xuexilema.blog.com.aop;
+package com.xuexilema.blog.common.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.xuexilema.blog.utils.HttpContextUtils;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class LogAspect {
-    @Pointcut("@annotation(com.xuexilema.blog.com.aop.LogAnnotation)")
+    @Pointcut("@annotation(com.xuexilema.blog.common.aop.LogAnnotation)")
     public void logPointCut() {
     }
 

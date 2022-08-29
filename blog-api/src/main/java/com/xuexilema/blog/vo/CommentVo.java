@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class CommentVo {
 
-    private Long id;
+    private String id;
 
     private UserVo author;
 

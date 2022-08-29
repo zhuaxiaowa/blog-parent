@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             return Result.error(ErrorCode.TOKEN_NO_EXIST.getCode(), ErrorCode.TOKEN_NO_EXIST.getMsg());
         }
         LoginUserVo loginUserVo = new LoginUserVo();
-        loginUserVo.setId(sysUser.getId());
+        loginUserVo.setId(String.valueOf(sysUser.getId()));
         loginUserVo.setNickname(sysUser.getNickname());
         loginUserVo.setAvatar(sysUser.getAvatar());
         loginUserVo.setAccount(sysUser.getAccount());
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
             sysUser.setAvatar("/static/img/logo.b3a48c0.png");
         }
         UserVo userVo = new UserVo();
-        userVo.setId(sysUser.getId());
+        userVo.setId(String.valueOf(sysUser.getId()));
         userVo.setAvatar(sysUser.getAvatar());
         userVo.setNickName(sysUser.getNickname());
         return userVo;

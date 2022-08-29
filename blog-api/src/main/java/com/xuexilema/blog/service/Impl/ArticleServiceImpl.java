@@ -2,6 +2,7 @@ package com.xuexilema.blog.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xuexilema.blog.dao.dos.Archivs;
 import com.xuexilema.blog.dao.mapper.ArticleBodyMapper;
@@ -58,16 +59,10 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public List<ArticleVo> listArticlesPage(PageParams pageParams) {
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        // 查询文章的参数，加上参数分类id不为空，加上分类条件,这样在首页文章分类标签里显示的就不是全部文章了。
-        if (pageParams.getCategoryId() != null) {
-            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
-        }
-
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        List<ArticleVo> articleVoList = copyList(articlePage.getRecords(), true, true);
-        return articleVoList;
+        IPage<Article> articleIPage = this.articleMapper.listArticlesPage(page,pageParams.getCategoryId()
+        ,pageParams.getTagId(),pageParams.getYear(),pageParams.getMonth());
+        return copyList(articleIPage.getRecords(),true,true);
     }
 
     /**
@@ -142,7 +137,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = new Article();
         article.setAuthorId(sysUser.getId());
         article.setBodyId(-1L);
-        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCategoryId(Long.parseLong(articleParam.getCategory().getId()));
         article.setCreateDate(System.currentTimeMillis());
         article.setSummary(articleParam.getSummary());
         article.setTitle(articleParam.getTitle());
@@ -155,7 +150,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (tagVos != null) {
             for (TagVo tagVo : tagVos) {
                 ArticleTag articleTag = new ArticleTag();
-                articleTag.setTagId(tagVo.getId());
+                articleTag.setTagId(Long.parseLong(tagVo.getId()));
                 articleTag.setArticleId(article.getId());
                 this.articleTagMapper.insert(articleTag);
             }
@@ -169,7 +164,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setBodyId(articleBody.getId());
 
         ArticleVo articleVo = new ArticleVo();
-        articleVo.setId(article.getId());
+        articleVo.setId(String.valueOf(article.getId()));
         return Result.success(articleVo);
     }
 
@@ -214,6 +209,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleVo copy(Article article, boolean isAuthor, boolean isTags, boolean isBody, boolean isCategory) {
         ArticleVo articleVo = new ArticleVo();
         BeanUtils.copyProperties(article, articleVo);
+        articleVo.setId(String.valueOf(article.getId()));
         if (isAuthor) {
             SysUser author = userService.findById(article.getAuthorId());
             articleVo.setAuthor(author.getNickname());

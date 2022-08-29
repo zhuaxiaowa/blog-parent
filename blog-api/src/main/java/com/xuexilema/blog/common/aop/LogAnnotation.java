@@ -1,4 +1,4 @@
-package com.xuexilema.blog.com.aop;
+package com.xuexilema.blog.common.aop;
 
 import java.lang.annotation.*;
 

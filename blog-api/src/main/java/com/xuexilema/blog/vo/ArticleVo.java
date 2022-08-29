@@ -10,8 +10,8 @@ import java.util.List;
 public class ArticleVo {
 
     // 一定要加，不然会出现精度损失
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
+//    @JsonSerialize(using = ToStringSerializer.class)
+    private String id;
 
     private String title;
 

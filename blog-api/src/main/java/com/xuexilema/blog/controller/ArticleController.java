@@ -1,6 +1,7 @@
 package com.xuexilema.blog.controller;
 
-import com.xuexilema.blog.com.aop.LogAnnotation;
+import com.xuexilema.blog.common.aop.LogAnnotation;
+import com.xuexilema.blog.common.cache.Cache;
 import com.xuexilema.blog.service.ArticleService;
 import com.xuexilema.blog.vo.ArticleVo;
 import com.xuexilema.blog.vo.Result;
@@ -27,6 +28,7 @@ public class ArticleController {
     // result是统一结果返回
     @PostMapping
     @LogAnnotation(module = "文章", operation = "获取文章列表")
+    @Cache(expire = 5 * 60 * 1000,name = "articles")
     public Result articles(@RequestBody PageParams pageParams) {
 
         // ArticleVo页面接收的数据
@@ -45,6 +47,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("/hot")
+    @Cache(expire = 5 * 60 * 1000,name = "hot_articles")
     public Result hotArticles() {
         int limit = 5;
         Result result = articleService.hotArticles(limit);
